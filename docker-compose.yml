@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # 🤖 Ollama 大模型引擎服務
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      # 模型持久化鎖定在專案目錄下
+      - ./.ollama:/root/.ollama
+    restart: unless-stopped
+
+  # 🍃 MongoDB 輕量資料庫服務
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      # 依據您當前 .env 的帳密進行初始化
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+    volumes:
+      # 數據持久化鎖定在專案目錄下
+      - ./.mongodb_data:/data/db
+    restart: unless-stopped

@@ -2,13 +2,9 @@
 .env
 *.bak*
 *.temp*
-*ssh_key*
+*ssh*
 # 忽略本地套件庫（不需追蹤，在別台機器只需 npm install）
-node_modules/
-
-# 忽略運行時產生的 SQLite 實體資料庫檔案
-*.db
-user_settings.db
+node_modules
 
 # 忽略 PM2 的日誌與運行快取
 .pm2/
@@ -18,3 +14,7 @@ user_settings.db
 .DS_Store
 Thumbs.db
 .git_token
+*mongodb*
+*.ollama*
+.mongodb_data
+.ollama
