@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    container_name: backend_container
+    image: backend:dev
+    env_file:
+      - ./src/backend/.env
+    volumes:
+      - ./src/backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/mydb
+      - OLLAMA_HOST=http://ollama:11434
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    container_name: frontend_container
+    env_file:
+      - ./src/frontend/.env
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+    image: frontend:dev
+    environment:
+      - BACKEND_URL=http://backend:3000
+    command: npm run dev
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data_dev:/data/db
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_container
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data_dev:/root/.ollama
+
+volumes:
+  mongo_data_dev:
+  ollama_data_dev:
